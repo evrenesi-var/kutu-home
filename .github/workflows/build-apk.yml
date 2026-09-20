@@ -22,13 +22,18 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Build Kutu Home
+      - name: Find and Build Kutu Home
         run: |
-          cd KutuHome-ready-project
+          PROJECT_FILE=$(find . -name "settings.gradle.kts" | head -n 1)
+          PROJECT_DIR=$(dirname "$PROJECT_FILE")
+
+          echo "Project found at: $PROJECT_DIR"
+
+          cd "$PROJECT_DIR"
           gradle :app:assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Kutu-Home-APK
-          path: KutuHome-ready-project/app/build/outputs/apk/debug/app-debug.apk
+          path: "**/app/build/outputs/apk/debug/app-debug.apk"
